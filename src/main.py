@@ -62,9 +62,9 @@ def _parse_changes(
     head_line: str,
     fix_issue_regex: str,
     fix_issue_repl: str,
-    name: Optional[str],
+    name: str,
 ) -> str:
-    top, sep, msg = changes.partition(start_line)
+    _, sep, msg = changes.partition(start_line)
     if not sep:
         raise ValueError(
             f"Cannot find TOWNCRIER start mark ({start_line!r}) "
