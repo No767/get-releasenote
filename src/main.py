@@ -1,20 +1,17 @@
 #!/usr/bin/env python3
 
-import dataclasses
 import os
 import re
-import shutil
 import sys
-import tempfile
 from pathlib import Path
 from typing import Optional
-import msgspec
 
-from packaging.utils import parse_sdist_filename, parse_wheel_filename
+import msgspec
 from packaging.version import parse as parse_version
 
 try:
     from dotenv import load_dotenv
+
     load_dotenv()
 except ImportError:
     pass
@@ -29,8 +26,6 @@ class Context(msgspec.Struct):
         if not fname.exists():
             raise ValueError(f"file '{name}' doesn't exist")
         return fname.read_text("utf-8")
-
-
 
 
 def parse_changes(
@@ -160,10 +155,10 @@ def check_fix_issue(fix_issue_regex: str, fix_issue_repl: str) -> None:
 def check_head(version: str, head: Optional[str]) -> None:
     if not head:
         return
-    PRE = "refs/tags/"
-    if not head.startswith(PRE):
+    pre = "refs/tags/"
+    if not head.startswith(pre):
         raise ValueError(f"Git head '{head}' doesn't point at a tag")
-    tag = head[len(PRE) :]
+    tag = head[len(pre) :]
     if tag != version and tag != "v" + version:
         raise ValueError(f"Git tag '{tag}' mismatches with version '{version}'")
 
