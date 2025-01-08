@@ -3,16 +3,16 @@ version: '3'
 tasks:
   check:
     cmds:
-      - pyright src
-      - ruff check src --fix --exit-non-zero-on-fix
+      - pyright main.py
+      - ruff check main.py --fix --exit-non-zero-on-fix
     silent: true
 
   lint:
     cmds:
-      - ruff check src --fix --exit-non-zero-on-fix
+      - ruff check main.py --fix --exit-non-zero-on-fix
     silent: true
     
   fmt:
     cmds:
-      - ruff format src
+      - ruff format main.py
     silent: true
