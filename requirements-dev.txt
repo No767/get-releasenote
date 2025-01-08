@@ -6,9 +6,6 @@ pyright[nodejs]>=1.1.391,<2
 ruff>=0.8.5,<1
 tox>=4.23.2,<5
 
-# Testing
-pytest>=8.3.4,<9
-
 # For developmental purposes only
 towncrier>=24.8.0,<25
 python-dotenv>=1.0.1,<=2
