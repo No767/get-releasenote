@@ -127,14 +127,6 @@ combine-as-imports = true
 [tool.ruff.format]
 docstring-code-format = true
 
-[tool.pytest.ini_options]
-minversion = "8.0"
-addopts = "-ra"
-testpaths = [
-    "src/tests"
-]
-pythonpath = ["src"]
-
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
