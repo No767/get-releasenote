@@ -11,4 +11,4 @@ USER releasenote
 
 RUN pip install --user -r requirements.txt
 
-ENTRYPOINT ["/releasenote/src/main.py"]
+ENTRYPOINT ["/releasenote/main.py"]
