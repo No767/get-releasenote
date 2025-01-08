@@ -9,13 +9,6 @@ from typing import Optional
 import msgspec
 from packaging.version import parse as parse_version
 
-try:
-    from dotenv import load_dotenv
-
-    load_dotenv()
-except ImportError:
-    pass
-
 VERSION_RE = re.compile(
     "^{version} *= *{spec}".format(
         version="(?:__version__|version)",
