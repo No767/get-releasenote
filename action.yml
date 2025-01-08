@@ -26,11 +26,11 @@ inputs:
   start_line:
     description: The marker for towncrier start point
     required: false
-    default: '.. towncrier release notes start'
+    default: '<!-- towncrier release notes start -->\n'
   head_line:
     description: Regular expression for head line
     required: false
-    default: "##\\s{name}\\s{version}\\s-\\s({date})?"
+    default: '##\\s{name}\\s{version}\\s-\\s({date})?'
   fix_issue_regex:
     description: Regexp for issue record replacement
     required: false
