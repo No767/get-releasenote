@@ -38,7 +38,8 @@ def parse_changes(
     fix_issue_repl: str,
     name: str,
 ) -> str:
-    check_fix_issue(fix_issue_regex, fix_issue_repl)
+    if fix_issue_regex and not fix_issue_repl or not fix_issue_regex and fix_issue_repl:
+        raise ValueError("fix_issue_regex and fix_issue_repl should be used together")
     changes = ctx.read_file(changes_file)
 
     return _parse_changes(
@@ -145,11 +146,6 @@ def find_version(ctx: Context, version_file: str, version: str) -> str:
     if match := VERSION_RE.search(txt):
         return match.group(2)
     raise ValueError(f"Unable to determine version in file '{version_file}'")
-
-
-def check_fix_issue(fix_issue_regex: str, fix_issue_repl: str) -> None:
-    if fix_issue_regex and not fix_issue_repl or not fix_issue_regex and fix_issue_repl:
-        raise ValueError("fix_issue_regex and fix_issue_repl should be used together")
 
 
 def check_head(version: str, head: Optional[str]) -> None:

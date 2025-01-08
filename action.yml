@@ -30,7 +30,7 @@ inputs:
   head_line:
     description: Regular expression for head line
     required: false
-    default: "{name} {version}\\s+\\({date}\\)\n====+\n?" # todo: fix this for markdown support
+    default: "##\\s{name}\\s{version}\\s-\\s({date})?"
   fix_issue_regex:
     description: Regexp for issue record replacement
     required: false
