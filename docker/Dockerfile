@@ -1,7 +1,7 @@
 FROM python:3.13-slim-bookworm
 
 WORKDIR /releasenote
-COPY /src /releasenote/src
+COPY main.py /releasenote/main.py
 COPY requirements.txt /releasenote/requirements.txt
 
 RUN adduser --disabled-password --gecos "" releasenote \
