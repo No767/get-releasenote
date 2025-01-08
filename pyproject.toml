@@ -37,13 +37,13 @@ Homepage = "https://github.com/No767/get-releasenote"
 Repository = "https://github.com/No767/get-releasenote"
 
 [tool.towncrier]
-directory = "changelog.d"
+directory = "changes"
 filename = "changelog.md"
-start_string = "<!-- towncrier release notes start -->\n"
+start_string = "<!-- towncrier release notes start -->"
 underlines = ["", "", ""]
 title_format = "## get-releasenote [{version}](https://github.com/No767/get-releasenote/tree/{version}) - {project_date}"
 issue_format = "[#{issue}](https://github.com/No767/get-releasenote/issues/{issue})"
-package = "src"
+package = "main"
 
   [[tool.towncrier.section]]
     path = ""

@@ -26,11 +26,11 @@ inputs:
   start_line:
     description: The marker for towncrier start point
     required: false
-    default: '<!-- towncrier release notes start -->\n'
+    default: '<!-- towncrier release notes start -->'
   head_line:
     description: Regular expression for head line
     required: false
-    default: '##\\s{name}\\s{version}\\(.*\\)\\s-\\s({date})?'
+    default: '##\s{name}\s{version}\(.*\)[\s-]*({date})'
   fix_issue_regex:
     description: Regexp for issue record replacement
     required: false
@@ -54,7 +54,7 @@ branding:
 
 runs:
   using: docker
-  image: docker/Dockerfile
+  image: docker://ghcr.io/no767/get-releasenote:edge
   env:
     INPUT_CHECK_REF: ${{ inputs.check_ref }}
     INPUT_CHANGES_FILE:  ${{ inputs.changes_file }}

@@ -7,6 +7,7 @@ from pathlib import Path
 from typing import Optional
 
 import msgspec
+from dotenv import load_dotenv
 from packaging.version import parse as parse_version
 
 VERSION_RE = re.compile(
@@ -35,9 +36,10 @@ class Output(msgspec.Struct, frozen=True):
     dev_release: bool
 
     def show(self) -> None:
-        print(f"::set-output name=version::{self.version}")
-        print(f"::set-output name=prerelease::{str(self.pre_release).lower()}")
-        print(f"::set-output name=devrelease::{str(self.dev_release).lower()}")
+        with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+            print(f"version={self.version}", file=fh)
+            print(f"prerelease={str(self.pre_release).lower()}", file=fh)
+            print(f"devrelease={str(self.dev_release).lower()}", file=fh)
 
 
 class Parser:
@@ -127,6 +129,7 @@ class Parser:
             ),
             re.MULTILINE,
         )
+
         match = head_re.match(msg)
         if match is None:
             raise ValueError(
@@ -188,6 +191,7 @@ class Controller:
 
 
 def main() -> int:
+    load_dotenv()  # Shouldn't have that much of an impact
     controller = Controller(root=Path.cwd())
     controller.start()
     return 0
