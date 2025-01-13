@@ -54,7 +54,7 @@ branding:
 
 runs:
   using: docker
-  image: ghcr.io/no767/get-releasenote:latest
+  image: docker://ghcr.io/no767/get-releasenote:latest
   env:
     INPUT_CHECK_REF: ${{ inputs.check_ref }}
     INPUT_CHANGES_FILE:  ${{ inputs.changes_file }}
