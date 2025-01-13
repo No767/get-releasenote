@@ -4,11 +4,6 @@ WORKDIR /releasenote
 COPY main.py /releasenote/main.py
 COPY requirements.txt /releasenote/requirements.txt
 
-RUN adduser --disabled-password --gecos "" releasenote \
-  && chown -R releasenote:releasenote /releasenote
-
-USER releasenote
-
-RUN pip install --user -r requirements.txt
+RUN pip install -r requirements.txt
 
 ENTRYPOINT ["/releasenote/main.py"]
