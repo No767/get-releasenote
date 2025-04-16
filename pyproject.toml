@@ -1,7 +1,7 @@
 [project]
 name = "get_releasenote"
 description = "GitHub action for extracting towncrier release notes per version"
-version = "0.1.0"
+version = "0.2.0"
 authors = [
     { name="No767", email="73260931+No767@users.noreply.github.com"}
 ]
