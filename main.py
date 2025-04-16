@@ -36,9 +36,10 @@ class Output(msgspec.Struct, frozen=True):
     dev_release: bool
 
     def show(self) -> None:
-        print(f"::set-output name=version::{self.version}")
-        print(f"::set-output name=prerelease::{str(self.pre_release).lower()}")
-        print(f"::set-output name=devrelease::{str(self.dev_release).lower()}")
+        with open(os.environ["GITHUB_OUTPUT"], "a") as fh:
+            print(f"version={self.version}", file=fh)
+            print(f"prerelease={str(self.pre_release).lower()}", file=fh)
+            print(f"devrelease={str(self.dev_release).lower()}", file=fh)
 
 
 class Parser:
