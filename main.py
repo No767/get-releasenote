@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+__version__ = "0.6.0"
+
 import os
 import re
 import sys
@@ -7,6 +9,7 @@ from pathlib import Path
 from typing import Optional
 
 import msgspec
+from dotenv import load_dotenv
 from packaging.version import parse as parse_version
 
 VERSION_RE = re.compile(
@@ -127,6 +130,7 @@ class Parser:
             ),
             re.MULTILINE,
         )
+
         match = head_re.match(msg)
         if match is None:
             raise ValueError(
@@ -188,6 +192,7 @@ class Controller:
 
 
 def main() -> int:
+    load_dotenv()  # Shouldn't have that much of an impact
     controller = Controller(root=Path.cwd())
     controller.start()
     return 0

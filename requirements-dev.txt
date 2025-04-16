@@ -8,4 +8,3 @@ tox>=4.23.2,<5
 
 # For developmental purposes only
 towncrier>=24.8.0,<25
-python-dotenv>=1.0.1,<=2
