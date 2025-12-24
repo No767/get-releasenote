@@ -1,0 +1,55 @@
+[tools]
+uv = "latest"
+
+
+[settings]
+experimental = true
+pin = true
+
+
+[env]
+_.file = [{ path = "{{ config_root }}/.env" }]
+
+[tasks."lint"]
+description = "Lints the codebase by type checking and general linting"
+env._.path = ".venv/bin"
+dir = "{{ config_root }}"
+run = ["pyright main.py", "ruff check main.py --fix  --exit-non-zero-on-fix"]
+
+[tasks."format"]
+description = "Formats the codebase"
+env._.path = ".venv/bin"
+dir = "{{ config_root }}"
+run = "ruff format main.py"
+
+[tasks."check"]
+description = "Lint and format codebase. This is necessary to handle import sorting and formatting. TD;LR: Run this task once you are done with development at the end of the PR"
+run = [{ task = "lint" }, { task = "format" }]
+
+[tasks."docker:build"]
+description = "Builds dockerfile"
+env._.path = ".venv/bin"
+dir = "{{ config_root }}"
+run = "sudo docker build -f docker/Dockerfile -t no767/get-releasenote:dev-latest ."
+# Towncrier tasks
+[tasks."towncrier:create"]
+description = "Creates towncrier entry"
+env._.path = ".venv/bin"
+usage = '''
+flag "--filename <filename>" help="Filename to use"
+flag "--entry <entry>" help="Entry to put in"
+'''
+dir = "{{ config_root }}"
+run = '''
+#!/usr/bin/env bash
+set -euo pipefail
+
+towncrier create ${usage_filename?} && echo "${usage_entry?}" > changes/${usage_filename?}
+'''
+
+[tasks."towncrier:build"]
+description = "Builds towncrier changelog"
+env._.path = ".venv/bin"
+dir = "{{ config_root }}"
+run = "towncrier build --yes"
+

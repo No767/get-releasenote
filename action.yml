@@ -6,7 +6,7 @@ inputs:
     required: true
   output_file:
     description: Where to write the output
-    required: true
+    required: false
   check_ref:
     description: Perform git tag check to match provided version
     required: false
@@ -14,7 +14,6 @@ inputs:
   name:
     description: Package name as presented in CHANGES file.
     required: false
-    default: ''
   version:
     description: Release version to extract
     required: false
@@ -30,7 +29,7 @@ inputs:
   head_line:
     description: Regular expression for head line
     required: false
-    default: '##\s{name}\s{version}\(.*\)[\s-]*({date})'
+    default: '##\s{name}\s\[{version}\]\(.*\)[\s-]*({date})'
   fix_issue_regex:
     description: Regexp for issue record replacement
     required: false
@@ -39,7 +38,6 @@ inputs:
     description: Replacement rule for regexps found by fix_issue_regex
     required: false
     default: ''
-
 outputs:
   version:
     description: Used version number
@@ -54,15 +52,5 @@ branding:
 
 runs:
   using: docker
-  image: docker://ghcr.io/no767/get-releasenote:latest
-  env:
-    INPUT_CHECK_REF: ${{ inputs.check_ref }}
-    INPUT_CHANGES_FILE:  ${{ inputs.changes_file }}
-    INPUT_OUTPUT_FILE:  ${{ inputs.output_file }}
-    INPUT_NAME:  ${{ inputs.name }}
-    INPUT_VERSION:  ${{ inputs.version }}
-    INPUT_VERSION_FILE:  ${{ inputs.version_file }}
-    INPUT_START_LINE:  ${{ inputs.start_line }}
-    INPUT_HEAD_LINE:  ${{ inputs.head_line }}
-    INPUT_FIX_ISSUE_REGEX:  ${{ inputs.fix_issue_regex }}
-    INPUT_FIX_ISSUE_REPL:  ${{ inputs.fix_issue_repl }}
+  image: docker://ghcr.io/no767/get-releasenote:edge
+

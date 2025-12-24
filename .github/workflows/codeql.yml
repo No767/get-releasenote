@@ -2,12 +2,11 @@ name: "CodeQL"
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
     
   pull_request:
-    branches:
-      - main
+    branches: [main]
+
 
 jobs:
   Analyze:
@@ -18,36 +17,39 @@ jobs:
       contents: read
       security-events: write
 
+    env:
+      UV_CACHE_DIR: /tmp/.uv-cache
+      UV_SYSTEM_PYTHON: 1
+
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v4
+    - name: Checkout Repository  
+      uses: actions/checkout@v6
 
     - name: Set up Python
-      id: setup-python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
-        python-version: '3.x'
+        python-version: "3.x"
 
-    - name: Cache Dependencies
-      id: cache-pip
-      uses: actions/cache@v4
+    - name: Install uv
+      uses: astral-sh/setup-uv@v7
       with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-codeql-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-codeql-pip-
-    
-    - name: Install Dependencies
-      if: steps.cache-pip.outputs.cache-hit != 'true'
-      run: |
-        pip install -r requirements.txt
-    
+        version: "latest"
+        enable-cache: false
+        
+    - name: Install dependencies
+      run: | 
+        uv pip install -r requirements-dev.txt
+
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v4
       with:
         languages: python
 
-    - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+    - name: Perform CodeQL analysis
+      uses: github/codeql-action/analyze@v4
       with:
         upload: true
+
+    - name: Minimize uv cache
+      run: |
+        uv cache prune --ci
