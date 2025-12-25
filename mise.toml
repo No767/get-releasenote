@@ -31,6 +31,7 @@ description = "Builds dockerfile"
 env._.path = ".venv/bin"
 dir = "{{ config_root }}"
 run = "sudo docker build -f docker/Dockerfile -t no767/get-releasenote:dev-latest ."
+
 # Towncrier tasks
 [tasks."towncrier:create"]
 description = "Creates towncrier entry"

@@ -222,7 +222,7 @@ def main() -> int:
         start_line=action_inputs.start_line,
         head_line=action_inputs.head_line,
         fix_issue_regex=action_inputs.fix_issue_regex,
-        fix_issue_repl=action_inputs.fix_issue_repl
+        fix_issue_repl=action_inputs.fix_issue_repl,
     )
 
     output_file = root / action_inputs.output_file
