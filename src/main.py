@@ -10,6 +10,8 @@ import msgspec
 from dotenv import dotenv_values, find_dotenv
 from packaging.version import parse as parse_version
 
+__version__ = "0.3.0"
+
 ENV_VAR_LIST = [
     "INPUT_CHANGES_FILE",
     "INPUT_OUTPUT_FILE",
@@ -22,14 +24,6 @@ ENV_VAR_LIST = [
     "INPUT_FIX_ISSUE_REGEX",
     "INPUT_FIX_ISSUE_REPL",
 ]
-
-VERSION_RE = re.compile(
-    "^{version} *= *{spec}".format(
-        version="(?:__version__|version)",
-        spec=r"""(["'])((?:(?!\1).)*)\1""",
-    ),
-    re.MULTILINE,
-)
 
 
 class ActionInputs(msgspec.Struct, frozen=True):
@@ -50,7 +44,9 @@ class Context(msgspec.Struct):
     version: Optional[str] = None
 
     def read_file(self, name: str) -> str:
-        self.root = Path(os.environ.get("GITHUB_WORKSPACE", "."))
+        if os.getenv("GITHUB_WORKSPACE"):
+            self.root = Path(os.environ.get("GITHUB_WORKSPACE", "."))
+
         fname = self.root / name
         if not fname.exists():
             msg = f"file '{name}' doesn't exist (Path: {fname})"
@@ -73,6 +69,14 @@ class Output(msgspec.Struct, frozen=True):
 
 class Parser:
     """Responsible for parsing changelog changes"""
+
+    VERSION_RE = re.compile(
+        "^{version} *= *{spec}".format(
+            version="(?:__version__|version)",
+            spec=r"""(["'])((?:(?!\1).)*)\1""",
+        ),
+        re.MULTILINE,
+    )
 
     def __init__(self, changes_file: str, name: str):
         self.changes_file = changes_file
@@ -115,37 +119,27 @@ class Parser:
         self, ctx: Context, *, version_file: Optional[str], version: Optional[str]
     ) -> str:
         if version is not None:
+            # Check if it's a valid version
+            parse_version(version)
             return version
 
         if version_file is not None:
             txt = ctx.read_file(version_file)
-            if match := VERSION_RE.search(txt):
+            if match := self.VERSION_RE.search(txt):
                 return match.group(2)
 
         msg = f"Unable to determine version in file '{version_file}'"
         raise ValueError(msg)
 
-    def parse(
+    def _parse(
         self,
         ctx: Context,
-        *,
+        changes: str,
         start_line: str,
         head_line: str,
         fix_issue_regex: Optional[str],
         fix_issue_repl: Optional[str],
-    ) -> str:
-        if (fix_issue_regex and not fix_issue_repl) or (
-            not fix_issue_regex and fix_issue_repl
-        ):
-            raise ValueError(
-                "fix_issue_regex and fix_issue_repl should be used together"
-            )
-
-        if not ctx.version:
-            raise ValueError("Version failed to set when finding version")
-
-        changes = ctx.read_file(self.changes_file)
-
+    ):
         _, sep, msg = changes.partition(start_line)
         if not sep:
             msg = (
@@ -185,6 +179,35 @@ class Parser:
         if fix_issue_regex:
             msg = re.sub(fix_issue_regex, fix_issue_repl or "", msg)
         return msg.strip()
+
+    def parse(
+        self,
+        ctx: Context,
+        *,
+        start_line: str,
+        head_line: str,
+        fix_issue_regex: Optional[str],
+        fix_issue_repl: Optional[str],
+    ) -> str:
+        if (fix_issue_regex and not fix_issue_repl) or (
+            not fix_issue_regex and fix_issue_repl
+        ):
+            raise ValueError(
+                "fix_issue_regex and fix_issue_repl should be used together"
+            )
+
+        if not ctx.version:
+            raise ValueError("Version failed to set when finding version")
+
+        changes = ctx.read_file(self.changes_file)
+        return self._parse(
+            ctx,
+            changes=changes,
+            start_line=start_line,
+            head_line=head_line,
+            fix_issue_regex=fix_issue_regex,
+            fix_issue_repl=fix_issue_repl,
+        )
 
 
 def sanitize_input(env_input: dict[str, str]) -> dict[str, Optional[str]]:

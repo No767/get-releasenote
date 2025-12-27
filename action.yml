@@ -38,6 +38,7 @@ inputs:
     description: Replacement rule for regexps found by fix_issue_regex
     required: false
     default: ''
+
 outputs:
   version:
     description: Used version number

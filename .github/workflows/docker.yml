@@ -14,7 +14,7 @@ jobs:
     if: ${{ github.event.pull_request.user.login != 'dependabot[bot]' }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Prepare Docker Meta
         id: meta
@@ -45,7 +45,7 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
-          file: ./docker/Dockerfile
+          file: docker/Dockerfile
           push: true
           cache-from: type=registry,ref=ghcr.io/no767/get-releasenote-build-cache:app
           cache-to: type=registry,mode=max,ref=ghcr.io/no767/get-releasenote-build-cache:app

@@ -1,14 +1,16 @@
-name: Lint
+name: Tests
+
 on:
   push:
     branches: [main]
       
   pull_request:
     branches: [main]
-
-jobs:
-  Check:
-    name: Check (${{ matrix.version }})
+      
+  
+jobs: 
+  Test:
+    name: Test (${{ matrix.version }})
     runs-on: ubuntu-24.04
 
     strategy:
@@ -20,14 +22,14 @@ jobs:
       UV_CACHE_DIR: /tmp/.uv-cache
 
     steps:
-      - name: Checkout Repository  
+      - name: Checkout
         uses: actions/checkout@v6
 
       - name: Set up Python ${{ matrix.version }}
-        id: setup-python
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.version }}
+
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
@@ -47,17 +49,8 @@ jobs:
         run: | 
           uv sync --frozen
 
-      - name: Check typing
-        run: |
-          uv run pyright src
-
-      - name: Check codebase
-        run: |
-          uv run ruff check src --exit-non-zero-on-fix
-
-      - name: Check for formatting
-        run: |
-          uv run ruff format src --check
+      - name: Run Tests
+        run: uv run pytest
 
       - name: Minimize uv cache
         run: |

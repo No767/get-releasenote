@@ -2,39 +2,29 @@
 name = "get_releasenote"
 description = "GitHub action for extracting towncrier release notes per version"
 version = "0.2.0"
-authors = [
-    { name="No767", email="73260931+No767@users.noreply.github.com"}
-]
-maintainers = [
-    { name="No767", email="73260931+No767@users.noreply.github.com"}
-]
 readme = "README.md"
-dynamic = ["dependencies"]
-requires-python = ">=3.9,<4"
-keywords = [
-    "towncrier-extractor"
-]
-classifiers = [
-    "Development Status :: 2 - Pre-Alpha",
-    "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
-    "Natural Language :: English",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: Implementation :: CPython",
-    "Topic :: Software Development :: Libraries",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-    "Topic :: Utilities",
-    "Typing :: Typed"
+requires-python = ">=3.12,<4"
+dependencies = [
+    "packaging~=25.0",
+    "msgspec~=0.20.0",
+    "python-dotenv~=1.2.1"
 ]
 
-[project.urls]
-Homepage = "https://github.com/No767/get-releasenote"
-Repository = "https://github.com/No767/get-releasenote"
+[dependency-groups]
+dev = [
+  "towncrier~=25.8.0",
+  { include-group = "lint" },
+  { include-group = "tests"}
+]
+
+tests = [
+  "pytest~=9.0.2"
+]
+
+lint = [
+  "pyright[nodejs]~=1.1.407",
+  "ruff~=0.14.10"
+]
 
 [tool.towncrier]
 directory = "changes"
@@ -42,8 +32,8 @@ filename = "changelog.md"
 start_string = "<!-- towncrier release notes start -->"
 underlines = ["", "", ""]
 title_format = "## get-releasenote [{version}](https://github.com/No767/get-releasenote/tree/{version}) - {project_date}"
-issue_format = "[#{issue}](https://github.com/No767/get-releasenote/issues/{issue})"
-package = "main"
+issue_format = "#{issue}"
+package = "src/main"
 
   [[tool.towncrier.section]]
     path = ""
@@ -123,6 +113,7 @@ ignore = [
     "UP045",    # No, I prefer this
     "TRY003",   # Goes against the standard
     "RUF029",   # async in interface is fine
+    "S101",     # they are used for unit tests....
     "S311",     # We all know...
     "SIM105",   # Would prefer not to do this,
     "TC001",    # I prefer to avoid if TYPE_CHECKING
@@ -170,6 +161,10 @@ keep-runtime-typing = true
 [tool.ruff.format]
 docstring-code-format = true
 
-[build-system]
-requires = ["setuptools>=61.0"]
-build-backend = "setuptools.build_meta"
+[tool.pytest.ini_options]
+minversion = "9.0"
+addopts = "-rao"
+testpaths = [
+    "tests"
+]
+pythonpath = ["src"]

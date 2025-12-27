@@ -1,4 +1,5 @@
 [tools]
+act = "latest"
 uv = "latest"
 
 
@@ -14,13 +15,13 @@ _.file = [{ path = "{{ config_root }}/.env" }]
 description = "Lints the codebase by type checking and general linting"
 env._.path = ".venv/bin"
 dir = "{{ config_root }}"
-run = ["pyright main.py", "ruff check main.py --fix  --exit-non-zero-on-fix"]
+run = ["pyright src", "ruff check src tests --fix --exit-non-zero-on-fix"]
 
 [tasks."format"]
 description = "Formats the codebase"
 env._.path = ".venv/bin"
 dir = "{{ config_root }}"
-run = "ruff format main.py"
+run = "ruff format src tests"
 
 [tasks."check"]
 description = "Lint and format codebase. This is necessary to handle import sorting and formatting. TD;LR: Run this task once you are done with development at the end of the PR"
