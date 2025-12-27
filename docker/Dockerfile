@@ -9,17 +9,29 @@ ENV UV_LINK_MODE=copy
 # Disable Python downloads as the system Python interpreter instead
 ENV UV_PYTHON_DOWNLOADS=0
 
+# Do not install development dependencies
+ENV UV_NO_DEV=1
+
+# Do not install default groups
+ENV UV_NO_DEFAULT_GROUPS=true
+
+
 WORKDIR /app/
 
-COPY requirements.txt /app/
+COPY pyproject.toml uv.lock /app/
 
-# Install dependencies
+# Install dependencies through lockfile
 RUN --mount=type=cache,target=/root/.cache/uv \
-    --mount=type=bind,source=requirements.txt,target=requirements.txt \
-    uv venv && uv pip install -r requirements.txt
+    --mount=type=bind,source=uv.lock,target=uv.lock \
+    --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
+    uv sync --frozen --no-install-project
     
 # Add project source code
-COPY ./main.py /app
+COPY ./src /app
+
+# Install the rest (this allows for optimal caching)
+RUN --mount=type=cache,target=/root/.cache/uv \
+    uv sync --frozen
 
 FROM python:3.14-slim-trixie
 
@@ -28,8 +40,6 @@ ENV PYTHONPATH=/releasenote
 
 # Copy the server from the builder
 COPY --from=build /app /releasenote
-
-RUN chmod +x /releasenote/main.py
 
 ENV PATH="/releasenote/.venv/bin:$PATH"
 
