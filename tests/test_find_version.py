@@ -51,35 +51,40 @@ def test_invalid_versions(
 
 
 def test_find___version___no_spaces(ctx: Context, parser: Parser) -> None:
-    temp_version_file = (ctx.root / "file.py").write_text(
+    temp_version_file = ctx.root / "file.py"
+    temp_version_file.write_text(
         VERSION_FILE_TMPL.format(version_line="__version__='0.0.7'")
     )
     assert parser.find_version(ctx, version_file=temp_version_file, version=None) == "0.0.7"
 
 
 def test_find___version___from_file_single_quotes(ctx: Context, parser: Parser) -> None:
-    temp_version_file = (ctx.root / "file.py").write_text(
+    temp_version_file = ctx.root / "file.py"
+    temp_version_file.write_text(
         VERSION_FILE_TMPL.format(version_line="__version__ = '0.0.7'")
     )
     assert parser.find_version(ctx, version_file=temp_version_file, version=None) == "0.0.7"
 
 
 def test_find___version___from_file_double_quotes(ctx: Context, parser: Parser) -> None:
-    temp_version_file = (ctx.root / "file.py").write_text(
+    temp_version_file = ctx.root / "file.py"
+    temp_version_file.write_text(
         VERSION_FILE_TMPL.format(version_line='__version__ = "0.0.7"')
     )
     assert parser.find_version(ctx, version_file=temp_version_file, version=None) == "0.0.7"
 
 
 def test_find_version_from_file_single_quotes(ctx: Context, parser: Parser) -> None:
-    temp_version_file = (ctx.root / "file.py").write_text(
+    temp_version_file = ctx.root / "file.py"
+    temp_version_file.write_text(
         VERSION_FILE_TMPL.format(version_line="version = '0.0.7'")
     )
     assert parser.find_version(ctx, version_file=temp_version_file, version=None) == "0.0.7"
 
 
 def test_find_version_from_file_double_quotes(ctx: Context, parser: Parser) -> None:
-    temp_version_file = (ctx.root / "file.py").write_text(
+    temp_version_file = ctx.root / "file.py"
+    temp_version_file.write_text(
         VERSION_FILE_TMPL.format(version_line="version = '0.0.7'")
     )
     assert parser.find_version(ctx, version_file=temp_version_file, version=None) == "0.0.7"
