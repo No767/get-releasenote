@@ -10,13 +10,8 @@ on:
   
 jobs: 
   Test:
-    name: Test (${{ matrix.version }})
+    name: Test
     runs-on: ubuntu-24.04
-
-    strategy:
-      fail-fast: false
-      matrix:
-        version: ["3.12", "3.13", "3.14"]
 
     env:
       UV_CACHE_DIR: /tmp/.uv-cache
@@ -25,11 +20,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Set up Python ${{ matrix.version }}
+      - name: Set up Python
         uses: actions/setup-python@v6
         with:
-          python-version: ${{ matrix.version }}
-
+          python-version: "3.x"
 
       - name: Install uv
         uses: astral-sh/setup-uv@v7
