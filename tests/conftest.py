@@ -14,7 +14,7 @@ __all__ = ("Foo", "Bar", "spam_ham")
 """
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def ctx(tmp_path: pathlib.Path, version: Optional[str] = None) -> Context:
     temp_version_file = tmp_path / "file.py"
     temp_version_file.write_text(
@@ -23,6 +23,6 @@ def ctx(tmp_path: pathlib.Path, version: Optional[str] = None) -> Context:
     return Context(tmp_path, version)
 
 
-@pytest.fixture
+@pytest.fixture(scope="function")
 def parser() -> Parser:
     return Parser(changes_file="changelog.md", name="get-releasenote")
