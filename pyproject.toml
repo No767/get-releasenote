@@ -5,7 +5,7 @@ version = "0.2.0"
 readme = "README.md"
 requires-python = ">=3.12,<4"
 dependencies = [
-    "packaging~=26.2",
+    "packaging~=26.3",
     "msgspec~=0.21.1",
     "python-dotenv~=1.2.1"
 ]
@@ -23,7 +23,7 @@ tests = [
 
 lint = [
   "pyright[nodejs]~=1.1.411",
-  "ruff~=0.16.1"
+  "ruff~=0.16.2"
 ]
 
 [tool.towncrier]
