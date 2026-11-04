@@ -6,24 +6,24 @@ readme = "README.md"
 requires-python = ">=3.12,<4"
 dependencies = [
     "packaging~=26.3",
-    "msgspec~=0.21.1",
+    "msgspec>=0.21.1,<0.23.0",
     "python-dotenv~=1.2.1"
 ]
 
 [dependency-groups]
 dev = [
-  "towncrier~=25.8.0",
+  "towncrier>=25.8,<26.10",
   { include-group = "lint" },
   { include-group = "tests"}
 ]
 
 tests = [
-  "pytest~=9.1.1"
+  "pytest>=9.1.1,<9.3.0"
 ]
 
 lint = [
   "pyright[nodejs]~=1.1.411",
-  "ruff~=0.16.2"
+  "ruff>=0.16.2,<0.18.0"
 ]
 
 [tool.towncrier]
